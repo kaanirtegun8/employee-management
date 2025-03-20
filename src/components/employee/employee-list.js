@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
+import { router } from '../../services/router-service.js';
 
 export class EmployeeList extends LitElement {
   static get properties() {
@@ -150,15 +151,17 @@ export class EmployeeList extends LitElement {
     `;
   }
   
-  _onEdit(employee) {
+  _onEditEmployee(employee) {
     this.dispatchEvent(new CustomEvent('edit-employee', {
       detail: { employee },
       bubbles: true,
       composed: true
     }));
+    
+    router.navigate(`/edit-employee/${employee.id}`);
   }
   
-  _onDelete(employee) {
+  _onDeleteEmployee(employee) {
     this.dispatchEvent(new CustomEvent('delete-employee', {
       detail: { employee },
       bubbles: true,
@@ -218,13 +221,13 @@ export class EmployeeList extends LitElement {
             <div class="card-actions">
               <button 
                 class="action-button edit-button" 
-                @click=${() => this._onEdit(employee)}
+                @click=${() => this._onEditEmployee(employee)}
                 title="${i18n.t('actions.edit')}">
                 ✏️
               </button>
               <button 
                 class="action-button delete-button" 
-                @click=${() => this._onDelete(employee)}
+                @click=${() => this._onDeleteEmployee(employee)}
                 title="${i18n.t('actions.delete')}">
                 🗑️
               </button>

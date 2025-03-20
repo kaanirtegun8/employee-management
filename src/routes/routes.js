@@ -5,14 +5,14 @@ export const routes = [
     action: () => import('../pages/employee-list-page.js')
   },
   {
-    path: '/create',
-    component: 'employee-create-page',
-    action: () => import('../pages/employee-create-page.js')
+    path: '/add-new',
+    component: 'add-employee-page',
+    action: () => import('../pages/add-employee-page.js')
   },
   {
-    path: '/edit/:id',
-    component: 'employee-edit-page',
-    action: () => import('../pages/employee-edit-page.js')
+    path: '/edit-employee/:id',
+    component: 'edit-employee-page',
+    action: () => import('../pages/edit-employee-page.js')
   },
   {
     path: '(.*)',
