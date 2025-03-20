@@ -5,7 +5,8 @@ export class EmployeeTable extends LitElement {
   static get properties() {
     return {
       employees: { type: Array },
-      loading: { type: Boolean }
+      loading: { type: Boolean },
+      lang: { type: String }
     };
   }
   
@@ -13,6 +14,14 @@ export class EmployeeTable extends LitElement {
     super();
     this.employees = [];
     this.loading = false;
+    this.lang = document.documentElement.lang || 'en';
+    
+    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+  }
+  
+  _onLanguageChanged(e) {
+    this.lang = e.detail.lang;
+    this.requestUpdate();
   }
   
   static get styles() {
@@ -110,7 +119,7 @@ export class EmployeeTable extends LitElement {
   
   render() {
     if (this.loading) {
-      return html`<div class="loading-message">Loading...</div>`;
+      return html`<div class="loading-message">${i18n.t('loading') || 'Loading...'}</div>`;
     }
     
     if (!this.employees || this.employees.length === 0) {

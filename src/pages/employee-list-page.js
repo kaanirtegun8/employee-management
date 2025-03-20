@@ -3,6 +3,7 @@ import { LitElement, html, css } from 'lit';
 import '../components/layout/app-top-bar.js';
 import '../components/employee/employee-list-header.js';
 import '../components/employee/employee-table.js';
+import '../components/employee/employee-list.js';
 import '../components/ui/pagination.js';
 
 export class EmployeeListPage extends LitElement {
@@ -69,17 +70,64 @@ export class EmployeeListPage extends LitElement {
     this.loading = true;
     
     setTimeout(() => {
-      this.employees = Array(50).fill(null).map((_, index) => ({
-        id: index + 1,
-        firstName: 'Ahmet',
-        lastName: 'Sourtimes',
-        dateOfEmployment: '23/09/2022',
-        dateOfBirth: '23/09/2022',
-        phoneNumber: '+90 532 123 45 67',
-        email: 'ahmet@sourtimes.org',
-        department: 'analytics',
-        position: 'junior'
-      }));
+      const firstNames = [
+        'Ahmet', 'Mehmet', 'Ali', 'Mustafa', 'Hasan', 'İbrahim', 'Hüseyin', 'İsmail', 'Osman', 'Yusuf',
+        'Ayşe', 'Fatma', 'Emine', 'Hatice', 'Zeynep', 'Elif', 'Meryem', 'Özlem', 'Sibel', 'Hülya'
+      ];
+      
+      const lastNames = [
+        'Yılmaz', 'Kaya', 'Demir', 'Şahin', 'Çelik', 'Yıldız', 'Erdoğan', 'Öztürk', 'Aydın', 'Özdemir',
+        'Arslan', 'Doğan', 'Kılıç', 'Aslan', 'Çetin', 'Koç', 'Kurt', 'Korkmaz', 'Aksoy', 'Kaplan'
+      ];
+      
+      const departments = ['analytics', 'development', 'marketing', 'sales', 'hr', 'finance', 'operations'];
+      const positions = ['junior', 'mid', 'senior', 'manager', 'director', 'intern'];
+      
+      const randomDate = (start, end) => {
+        const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+      };
+      
+      const randomPhone = () => {
+        const prefixes = ['532', '533', '535', '536', '537', '538', '539', '542', '544', '545', '546', '548', '549'];
+        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+        const number = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
+        return `+90 ${prefix} ${number.substring(0, 3)} ${number.substring(3, 5)} ${number.substring(5, 7)}`;
+      };
+      
+      this.employees = Array(150).fill(null).map((_, index) => {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const department = departments[Math.floor(Math.random() * departments.length)];
+        const position = positions[Math.floor(Math.random() * positions.length)];
+        
+        const now = new Date();
+        const birthStart = new Date(now);
+        birthStart.setFullYear(now.getFullYear() - 65);
+        const birthEnd = new Date(now);
+        birthEnd.setFullYear(now.getFullYear() - 22);
+        const dateOfBirth = randomDate(birthStart, birthEnd);
+        
+        const empStart = new Date(now);
+        empStart.setFullYear(now.getFullYear() - 10);
+        const dateOfEmployment = randomDate(empStart, now);
+        
+        const emailName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ö/g, 'o');
+        const domains = ['company.com', 'example.org', 'sourtimes.org', 'acme.com', 'globex.net'];
+        const email = `${emailName}@${domains[Math.floor(Math.random() * domains.length)]}`;
+        
+        return {
+          id: index + 1,
+          firstName,
+          lastName,
+          dateOfEmployment,
+          dateOfBirth,
+          phoneNumber: randomPhone(),
+          email,
+          department,
+          position
+        };
+      });
       
       this._applyFilters();
       this.loading = false;
@@ -136,6 +184,30 @@ export class EmployeeListPage extends LitElement {
     console.log(`Delete employee: ${employee.id}`);
   }
   
+  _renderEmployeeView() {
+    const currentEmployees = this._getCurrentPageEmployees();
+    
+    if (this.viewMode === 'table') {
+      return html`
+        <employee-table
+          .employees=${currentEmployees}
+          .loading=${this.loading}
+          @edit-employee=${this._onEditEmployee}
+          @delete-employee=${this._onDeleteEmployee}
+        ></employee-table>
+      `;
+    } else {
+      return html`
+        <employee-list
+          .employees=${currentEmployees}
+          .loading=${this.loading}
+          @edit-employee=${this._onEditEmployee}
+          @delete-employee=${this._onDeleteEmployee}
+        ></employee-list>
+      `;
+    }
+  }
+  
   render() {
     return html`
       <app-top-bar></app-top-bar>
@@ -148,12 +220,7 @@ export class EmployeeListPage extends LitElement {
             @search=${this._onSearch}
           ></employee-list-header>
           
-          <employee-table
-            .employees=${this._getCurrentPageEmployees()}
-            .loading=${this.loading}
-            @edit-employee=${this._onEditEmployee}
-            @delete-employee=${this._onDeleteEmployee}
-          ></employee-table>
+          ${this._renderEmployeeView()}
         </div>
         
         <div class="pagination-container">

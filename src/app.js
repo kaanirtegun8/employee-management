@@ -4,6 +4,12 @@ import { routes } from './routes/routes.js';
 import { Router } from '@vaadin/router';
 
 export class App extends LitElement {
+  static get properties() {
+    return {
+      lang: { type: String }
+    };
+  }
+  
   static get styles() {
     return css`
       :host {
@@ -17,7 +23,15 @@ export class App extends LitElement {
 
   constructor() {
     super();
+    this.lang = document.documentElement.lang || 'en';
     this.createRenderRoot();
+    
+    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+  }
+  
+  _onLanguageChanged(e) {
+    this.lang = e.detail.lang;
+    this.requestUpdate();
   }
   
   createRenderRoot() {
@@ -35,7 +49,7 @@ export class App extends LitElement {
 
   render() {
     return html`
-      <div id="outlet"></div>
+      <div id="outlet" lang="${this.lang}"></div>
     `;
   }
 }

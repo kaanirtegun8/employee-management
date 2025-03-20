@@ -4,13 +4,22 @@ import { i18n } from '../../i18n/i18n.js';
 export class EmployeeListHeader extends LitElement {
   static get properties() {
     return {
-      viewMode: { type: String }
+      viewMode: { type: String },
+      lang: { type: String }
     };
   }
   
   constructor() {
     super();
     this.viewMode = 'table';
+    this.lang = document.documentElement.lang || 'en';
+    
+    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+  }
+  
+  _onLanguageChanged(e) {
+    this.lang = e.detail.lang;
+    this.requestUpdate();
   }
   
   static get styles() {
@@ -93,15 +102,15 @@ export class EmployeeListHeader extends LitElement {
         
         <div class="view-controls">
           <button 
-            class="view-button ${this.viewMode === 'list' ? 'active' : ''}" 
-            @click=${() => this._handleViewChange('list')}
-            title="${i18n.t('employeeList.list')}">
-            ☰
-          </button>
-          <button 
             class="view-button ${this.viewMode === 'table' ? 'active' : ''}" 
             @click=${() => this._handleViewChange('table')}
             title="${i18n.t('employeeList.table')}">
+            ☰
+          </button>
+          <button 
+            class="view-button ${this.viewMode === 'list' ? 'active' : ''}" 
+            @click=${() => this._handleViewChange('list')}
+            title="${i18n.t('employeeList.list')}">
             ⊞
           </button>
         </div>
