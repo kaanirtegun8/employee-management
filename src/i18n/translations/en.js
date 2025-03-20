@@ -26,7 +26,10 @@ export const en = {
     department: 'Department',
     position: 'Position',
     save: 'Save',
-    cancel: 'Cancel'
+    update: 'Update',
+    cancel: 'Cancel',
+    selectDepartment: 'Select Department',
+    selectPosition: 'Select Position'
   },
   departments: {
     analytics: 'Analytics',
