@@ -6,6 +6,9 @@ import '../components/employee/employee-table.js';
 import '../components/employee/employee-list.js';
 import '../components/ui/pagination.js';
 import { i18n } from '../i18n/i18n.js';
+import { store } from '../services/store/store.js';
+import { deleteEmployee } from '../services/store/actions.js';
+import { router } from '../services/router-service.js';
 
 export class EmployeeListPage extends LitElement {
   static get properties() {
@@ -34,11 +37,21 @@ export class EmployeeListPage extends LitElement {
     
     this._resizeHandler = this._handleResize.bind(this);
     window.addEventListener('resize', this._resizeHandler);
+    
+    this._unsubscribe = store.subscribe(state => {
+      this.employees = state.employees;
+      this._applyFilters();
+      this.loading = false;
+    });
   }
   
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('resize', this._resizeHandler);
+    
+    if (this._unsubscribe) {
+      this._unsubscribe();
+    }
   }
   
   _handleResize() {
@@ -78,80 +91,59 @@ export class EmployeeListPage extends LitElement {
         padding: 0.5rem;
         text-align: center;
       }
+      
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+      }
+      
+      .empty-state-icon {
+        font-size: 3rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state-message {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state-action {
+        margin-top: 1rem;
+      }
+      
+      .btn-add {
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      
+      .btn-add:hover {
+        background-color: #e55c00;
+      }
     `;
   }
   
   connectedCallback() {
     super.connectedCallback();
+    this.currentPage = 1;
     this._loadEmployees();
   }
   
   _loadEmployees() {
     this.loading = true;
     
+    this.employees = store.getState().employees;
+    this._applyFilters();
+    
     setTimeout(() => {
-      const firstNames = [
-        'Ahmet', 'Mehmet', 'Ali', 'Mustafa', 'Hasan', 'İbrahim', 'Hüseyin', 'İsmail', 'Osman', 'Yusuf',
-        'Ayşe', 'Fatma', 'Emine', 'Hatice', 'Zeynep', 'Elif', 'Meryem', 'Özlem', 'Sibel', 'Hülya'
-      ];
-      
-      const lastNames = [
-        'Yılmaz', 'Kaya', 'Demir', 'Şahin', 'Çelik', 'Yıldız', 'Erdoğan', 'Öztürk', 'Aydın', 'Özdemir',
-        'Arslan', 'Doğan', 'Kılıç', 'Aslan', 'Çetin', 'Koç', 'Kurt', 'Korkmaz', 'Aksoy', 'Kaplan'
-      ];
-      
-      const departments = ['analytics', 'development', 'marketing', 'sales', 'hr', 'finance', 'operations'];
-      const positions = ['junior', 'mid', 'senior', 'manager', 'director', 'intern'];
-      
-      const randomDate = (start, end) => {
-        const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-      };
-      
-      const randomPhone = () => {
-        const prefixes = ['532', '533', '535', '536', '537', '538', '539', '542', '544', '545', '546', '548', '549'];
-        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-        const number = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
-        return `+90 ${prefix} ${number.substring(0, 3)} ${number.substring(3, 5)} ${number.substring(5, 7)}`;
-      };
-      
-      this.employees = Array(150).fill(null).map((_, index) => {
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-        const department = departments[Math.floor(Math.random() * departments.length)];
-        const position = positions[Math.floor(Math.random() * positions.length)];
-        
-        const now = new Date();
-        const birthStart = new Date(now);
-        birthStart.setFullYear(now.getFullYear() - 65);
-        const birthEnd = new Date(now);
-        birthEnd.setFullYear(now.getFullYear() - 22);
-        const dateOfBirth = randomDate(birthStart, birthEnd);
-        
-        const empStart = new Date(now);
-        empStart.setFullYear(now.getFullYear() - 10);
-        const dateOfEmployment = randomDate(empStart, now);
-        
-        const emailName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ö/g, 'o');
-        const domains = ['company.com', 'example.org', 'sourtimes.org', 'acme.com', 'globex.net'];
-        const email = `${emailName}@${domains[Math.floor(Math.random() * domains.length)]}`;
-        
-        return {
-          id: index + 1,
-          firstName,
-          lastName,
-          dateOfEmployment,
-          dateOfBirth,
-          phoneNumber: randomPhone(),
-          email,
-          department,
-          position
-        };
-      });
-      
-      this._applyFilters();
       this.loading = false;
-    }, 1000);
+    }, 300);
   }
   
   _applyFilters() {
@@ -205,11 +197,9 @@ export class EmployeeListPage extends LitElement {
   
   _onDeleteEmployee(e) {
     const employee = e.detail.employee;
-    console.log(`Delete employee: ${employee.id}`);
     
     if (confirm(i18n.t('messages.confirmDelete'))) {
-      this.employees = this.employees.filter(emp => emp.id !== employee.id);
-      this._applyFilters();
+      store.dispatch(deleteEmployee(employee.id));
       
       alert(i18n.t('messages.employeeDeleted'));
     }
@@ -217,6 +207,20 @@ export class EmployeeListPage extends LitElement {
   
   _renderEmployeeView() {
     const currentEmployees = this._getCurrentPageEmployees();
+    
+    if (!this.loading && this.filteredEmployees.length === 0) {
+      return html`
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-message">${i18n.t('employeeList.empty')}</div>
+          <div class="empty-state-action">
+            <button @click=${() => router.navigate('/add-new')} class="btn-add">
+              ${i18n.t('navigation.createEmployee')}
+            </button>
+          </div>
+        </div>
+      `;
+    }
     
     if (this.isMobile || this.viewMode === 'list') {
       return html`

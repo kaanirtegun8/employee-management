@@ -2,6 +2,9 @@ import { LitElement, html, css } from 'lit';
 import '../components/layout/app-top-bar.js';
 import '../components/employee/employee-form.js';
 import { i18n } from '../i18n/i18n.js';
+import { store } from '../services/store/store.js';
+import { updateEmployee } from '../services/store/actions.js';
+import { router } from '../services/router-service.js';
 
 export class EditEmployeePage extends LitElement {
   static get properties() {
@@ -29,7 +32,6 @@ export class EditEmployeePage extends LitElement {
   }
   
   onBeforeEnter(location) {
-    console.log('Route params:', location.params);
     this.employeeId = location.params.id;
     this._loadEmployeeData();
   }
@@ -37,27 +39,29 @@ export class EditEmployeePage extends LitElement {
   _loadEmployeeData() {
     this.loading = true;
     
-    setTimeout(() => {
-      this.employeeData = {
-        id: this.employeeId,
-        firstName: 'Sample',
-        lastName: 'Employee',
-        dateOfEmployment: '2022-01-15',
-        dateOfBirth: '1990-05-20',
-        phoneNumber: '+90 533 123 45 67',
-        email: 'sample.employee@example.com',
-        department: 'tech',
-        position: 'senior'
-      };
-      
+    const id = parseInt(this.employeeId, 10);
+    
+    const employee = store.getState().employees.find(emp => emp.id === id);
+    
+    if (employee) {
+      this.employeeData = { ...employee };
       this.loading = false;
-    }, 500);
+    } else {
+      console.error(`Employee with ID ${id} not found`);
+      setTimeout(() => {
+        alert(i18n.t('messages.employeeNotFound'));
+        router.navigate('/');
+      }, 500);
+    }
   }
   
   _handleEmployeeUpdated(e) {
     const updatedEmployee = e.detail.employee;
-    console.log('Employee updated:', updatedEmployee);
     
+    const id = parseInt(this.employeeId, 10);
+    store.dispatch(updateEmployee(id, updatedEmployee));
+    
+    alert(i18n.t('messages.employeeUpdated'));
   }
   
   static get styles() {

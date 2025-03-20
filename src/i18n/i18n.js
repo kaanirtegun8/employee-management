@@ -52,8 +52,6 @@ class I18nService {
       
       document.documentElement.lang = lang;
       
-      console.log(`Language changed to: ${lang}`);
-      
       window.dispatchEvent(new CustomEvent('language-changed', {
         detail: { lang }
       }));

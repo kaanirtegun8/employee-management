@@ -56,7 +56,8 @@ export const tr = {
     confirmUpdate: 'Bu çalışanı güncellemek istediğinizden emin misiniz?',
     employeeCreated: 'Çalışan başarıyla oluşturuldu',
     employeeUpdated: 'Çalışan başarıyla güncellendi',
-    employeeDeleted: 'Çalışan başarıyla silindi'
+    employeeDeleted: 'Çalışan başarıyla silindi',
+    employeeNotFound: 'Çalışan bulunamadı'
   },
   loading: 'Yükleniyor...'
 }; 

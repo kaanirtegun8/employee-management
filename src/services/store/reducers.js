@@ -1,9 +1,13 @@
 import { ADD_EMPLOYEE, UPDATE_EMPLOYEE, DELETE_EMPLOYEE } from './actions.js';
 
 export const employeeReducer = (state = [], action) => {
+  
+  let newState;
+
   switch (action.type) {
     case ADD_EMPLOYEE:
-      return [...state, action.payload];
+      newState = [...state, action.payload];
+      return newState;
       
     case UPDATE_EMPLOYEE:
       return state.map(employee => 
