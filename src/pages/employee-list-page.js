@@ -5,6 +5,7 @@ import '../components/employee/employee-list-header.js';
 import '../components/employee/employee-table.js';
 import '../components/employee/employee-list.js';
 import '../components/ui/pagination.js';
+import { i18n } from '../i18n/i18n.js';
 
 export class EmployeeListPage extends LitElement {
   static get properties() {
@@ -68,7 +69,7 @@ export class EmployeeListPage extends LitElement {
         background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1rem;
+        padding: 1.25rem;
         margin-bottom: 1rem;
       }
       
@@ -205,6 +206,13 @@ export class EmployeeListPage extends LitElement {
   _onDeleteEmployee(e) {
     const employee = e.detail.employee;
     console.log(`Delete employee: ${employee.id}`);
+    
+    if (confirm(i18n.t('messages.confirmDelete'))) {
+      this.employees = this.employees.filter(emp => emp.id !== employee.id);
+      this._applyFilters();
+      
+      alert(i18n.t('messages.employeeDeleted'));
+    }
   }
   
   _renderEmployeeView() {

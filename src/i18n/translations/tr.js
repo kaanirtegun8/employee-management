@@ -5,7 +5,7 @@ export const tr = {
   },
   navigation: {
     employees: 'Çalışanlar',
-    createEmployee: 'Çalışan Ekle'
+    createEmployee: 'Yeni Ekle'
   },
   employeeList: {
     title: 'Çalışan Listesi',
@@ -19,14 +19,17 @@ export const tr = {
     editTitle: 'Çalışan Düzenle',
     firstName: 'Ad',
     lastName: 'Soyad',
-    dateOfEmployment: 'İşe Başlama Tarihi',
+    dateOfEmployment: 'İşe Giriş Tarihi',
     dateOfBirth: 'Doğum Tarihi',
     phoneNumber: 'Telefon Numarası',
     email: 'E-posta Adresi',
     department: 'Departman',
     position: 'Pozisyon',
     save: 'Kaydet',
-    cancel: 'İptal'
+    update: 'Güncelle',
+    cancel: 'İptal',
+    selectDepartment: 'Departman Seçin',
+    selectPosition: 'Pozisyon Seçin'
   },
   departments: {
     analytics: 'Analitik',

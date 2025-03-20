@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import '../components/layout/app-top-bar.js';
+import '../components/employee/employee-form.js';
 import { i18n } from '../i18n/i18n.js';
 
 export class AddEmployeePage extends LitElement {
@@ -21,6 +22,12 @@ export class AddEmployeePage extends LitElement {
     this.requestUpdate();
   }
   
+  _handleEmployeeCreated(e) {
+    const newEmployee = e.detail.employee;
+    console.log('New employee created:', newEmployee);
+    
+  }
+  
   static get styles() {
     return css`
       :host {
@@ -40,7 +47,7 @@ export class AddEmployeePage extends LitElement {
         background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1rem;
+        padding: 1.25rem;
         margin-bottom: 1rem;
       }
       
@@ -48,7 +55,7 @@ export class AddEmployeePage extends LitElement {
         font-size: 1.5rem;
         color: #ff6600;
         font-weight: bold;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.25rem 0;
       }
     `;
   }
@@ -60,7 +67,7 @@ export class AddEmployeePage extends LitElement {
       <div class="container">
         <div class="page-content">
           <h2 class="page-title">${i18n.t('employeeForm.createTitle')}</h2>
-          <!-- Employee form will be added here -->
+          <employee-form @employee-created=${this._handleEmployeeCreated}></employee-form>
         </div>
       </div>
     `;

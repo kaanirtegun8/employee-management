@@ -1,11 +1,13 @@
 import { LitElement, html, css } from 'lit';
 import '../components/layout/app-top-bar.js';
+import '../components/employee/employee-form.js';
 import { i18n } from '../i18n/i18n.js';
 
 export class EditEmployeePage extends LitElement {
   static get properties() {
     return {
       employeeId: { type: String },
+      employeeData: { type: Object },
       lang: { type: String },
       loading: { type: Boolean }
     };
@@ -14,6 +16,7 @@ export class EditEmployeePage extends LitElement {
   constructor() {
     super();
     this.employeeId = '';
+    this.employeeData = null;
     this.lang = document.documentElement.lang || 'en';
     this.loading = true;
     
@@ -28,8 +31,33 @@ export class EditEmployeePage extends LitElement {
   onBeforeEnter(location) {
     console.log('Route params:', location.params);
     this.employeeId = location.params.id;
-    this.loading = false;
-    this.requestUpdate();
+    this._loadEmployeeData();
+  }
+  
+  _loadEmployeeData() {
+    this.loading = true;
+    
+    setTimeout(() => {
+      this.employeeData = {
+        id: this.employeeId,
+        firstName: 'Sample',
+        lastName: 'Employee',
+        dateOfEmployment: '2022-01-15',
+        dateOfBirth: '1990-05-20',
+        phoneNumber: '+90 533 123 45 67',
+        email: 'sample.employee@example.com',
+        department: 'tech',
+        position: 'senior'
+      };
+      
+      this.loading = false;
+    }, 500);
+  }
+  
+  _handleEmployeeUpdated(e) {
+    const updatedEmployee = e.detail.employee;
+    console.log('Employee updated:', updatedEmployee);
+    
   }
   
   static get styles() {
@@ -51,7 +79,7 @@ export class EditEmployeePage extends LitElement {
         background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1rem;
+        padding: 1.25rem;
         margin-bottom: 1rem;
       }
       
@@ -59,13 +87,13 @@ export class EditEmployeePage extends LitElement {
         font-size: 1.5rem;
         color: #ff6600;
         font-weight: bold;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.25rem 0;
       }
       
       .employee-id {
         color: #666;
         font-size: 0.9rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
       }
     `;
   }
@@ -89,7 +117,10 @@ export class EditEmployeePage extends LitElement {
         <div class="page-content">
           <h2 class="page-title">${i18n.t('employeeForm.editTitle')}</h2>
           <p class="employee-id">ID: ${this.employeeId}</p>
-          <!-- Employee edit form will be added here -->
+          <employee-form 
+            .employee=${this.employeeData || {}}
+            @employee-updated=${this._handleEmployeeUpdated}
+          ></employee-form>
         </div>
       </div>
     `;
