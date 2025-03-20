@@ -4,7 +4,7 @@ export const en = {
     welcome: 'Welcome to the Employee Management System'
   },
   navigation: {
-    home: 'Home',
+    employees: 'Employees',
     createEmployee: 'Create Employee'
   },
   employeeList: {

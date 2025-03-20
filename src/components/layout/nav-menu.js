@@ -42,7 +42,7 @@ export class NavMenu extends LitElement {
       <nav>
         <ul>
           <li>
-            <a href="/">${i18n.t('navigation.home')}</a>
+            <a href="/">${i18n.t('navigation.employees')}</a>
           </li>
           <li>
             <a href="/create">${i18n.t('navigation.createEmployee')}</a>

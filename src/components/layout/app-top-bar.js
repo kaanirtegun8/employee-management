@@ -178,7 +178,7 @@ export class AppTopBar extends LitElement {
         <div class="actions">
           <a href="/" class="employees-link">
             <span class="user-icon">👤</span>
-            <span>${i18n.t('navigation.home')}</span>
+            <span>${i18n.t('navigation.employees')}</span>
           </a>
           
           <a href="/create" class="add-button">

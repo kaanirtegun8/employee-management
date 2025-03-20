@@ -102,15 +102,15 @@ export class EmployeeListHeader extends LitElement {
         
         <div class="view-controls">
           <button 
-            class="view-button ${this.viewMode === 'list' ? 'active' : ''}" 
-            @click=${() => this._handleViewChange('list')}
-            title="${i18n.t('employeeList.list')}">
-            ☰
-          </button>
-          <button 
             class="view-button ${this.viewMode === 'table' ? 'active' : ''}" 
             @click=${() => this._handleViewChange('table')}
             title="${i18n.t('employeeList.table')}">
+            ☰
+          </button>
+          <button 
+            class="view-button ${this.viewMode === 'list' ? 'active' : ''}" 
+            @click=${() => this._handleViewChange('list')}
+            title="${i18n.t('employeeList.list')}">
             ⊞
           </button>
         </div>

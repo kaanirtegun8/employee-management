@@ -3,6 +3,7 @@ import { LitElement, html, css } from 'lit';
 import '../components/layout/app-top-bar.js';
 import '../components/employee/employee-list-header.js';
 import '../components/employee/employee-table.js';
+import '../components/employee/employee-list.js';
 import '../components/ui/pagination.js';
 
 export class EmployeeListPage extends LitElement {
@@ -136,6 +137,30 @@ export class EmployeeListPage extends LitElement {
     console.log(`Delete employee: ${employee.id}`);
   }
   
+  _renderEmployeeView() {
+    const currentEmployees = this._getCurrentPageEmployees();
+    
+    if (this.viewMode === 'table') {
+      return html`
+        <employee-table
+          .employees=${currentEmployees}
+          .loading=${this.loading}
+          @edit-employee=${this._onEditEmployee}
+          @delete-employee=${this._onDeleteEmployee}
+        ></employee-table>
+      `;
+    } else {
+      return html`
+        <employee-list
+          .employees=${currentEmployees}
+          .loading=${this.loading}
+          @edit-employee=${this._onEditEmployee}
+          @delete-employee=${this._onDeleteEmployee}
+        ></employee-list>
+      `;
+    }
+  }
+  
   render() {
     return html`
       <app-top-bar></app-top-bar>
@@ -148,12 +173,7 @@ export class EmployeeListPage extends LitElement {
             @search=${this._onSearch}
           ></employee-list-header>
           
-          <employee-table
-            .employees=${this._getCurrentPageEmployees()}
-            .loading=${this.loading}
-            @edit-employee=${this._onEditEmployee}
-            @delete-employee=${this._onDeleteEmployee}
-          ></employee-table>
+          ${this._renderEmployeeView()}
         </div>
         
         <div class="pagination-container">

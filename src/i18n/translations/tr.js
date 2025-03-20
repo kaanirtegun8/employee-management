@@ -4,7 +4,7 @@ export const tr = {
     welcome: 'Çalışan Yönetim Sistemine Hoş Geldiniz'
   },
   navigation: {
-    home: 'Ana Sayfa',
+    employees: 'Çalışanlar',
     createEmployee: 'Çalışan Ekle'
   },
   employeeList: {
