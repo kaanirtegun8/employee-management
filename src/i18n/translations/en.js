@@ -5,7 +5,7 @@ export const en = {
   },
   navigation: {
     employees: 'Employees',
-    createEmployee: 'Create Employee'
+    createEmployee: 'Add New'
   },
   employeeList: {
     title: 'Employee List',

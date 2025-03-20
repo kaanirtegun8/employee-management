@@ -135,18 +135,50 @@ export class AppTopBar extends LitElement {
         border-radius: 2px;
       }
       
-      @media (max-width: 768px) {
-        .logo-text {
-          display: none;
+      @media (max-width: 767px) {
+        .top-bar {
+          padding: 0.8rem 1rem;
         }
         
+        .actions {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          justify-content: flex-end;
+        }
+        
+        .employees-link, .add-button, .language-switcher {
+          margin: 0;
+        }
+        
+        .employees-link {
+          order: 2;
+        }
+        
+        .add-button {
+          order: 3;
+        }
+        
+        .language-switcher {
+          order: 1;
+          margin-right: 0.5rem;
+        }
+        
+        
         .employees-link span {
-          display: none;
+          display: inline;
         }
         
         .add-button span {
+          display: inline;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .employees-link span:not(.user-icon), 
+        .add-button span:not(.add-icon) {
           display: none;
         }
+        
       }
     `;
   }
@@ -181,7 +213,7 @@ export class AppTopBar extends LitElement {
             <span>${i18n.t('navigation.employees')}</span>
           </a>
           
-          <a href="/create" class="add-button">
+          <a href="/add-new" class="add-button">
             <span class="add-icon">+</span>
             <span>${i18n.t('navigation.createEmployee')}</span>
           </a>
