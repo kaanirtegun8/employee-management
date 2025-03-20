@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { i18n } from '../../i18n/i18n.js';
 
 export class AppTopBar extends LitElement {
   static get properties() {
@@ -10,6 +11,17 @@ export class AppTopBar extends LitElement {
   constructor() {
     super();
     this.currentLang = document.documentElement.lang || 'en';
+    
+    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+  }
+  
+  connectedCallback() {
+    super.connectedCallback();
+    this.currentLang = document.documentElement.lang || 'en';
+  }
+  
+  _onLanguageChanged(e) {
+    this.currentLang = e.detail.lang;
   }
   
   static get styles() {
@@ -142,7 +154,11 @@ export class AppTopBar extends LitElement {
   _changeLang(lang) {
     if (this.currentLang !== lang) {
       this.currentLang = lang;
+      
       document.documentElement.lang = lang;
+      
+      i18n.setLanguage(lang);
+      
       this.dispatchEvent(new CustomEvent('lang-changed', {
         detail: { lang },
         bubbles: true,
@@ -155,19 +171,19 @@ export class AppTopBar extends LitElement {
     return html`
       <div class="top-bar">
         <a href="/" class="logo">
-          <img src="/src/assests/images/logo.webp" class="logo-icon" alt="ING Logo">
-          <span>ING</span>
+          <img src="/src/assets/images/logo.webp" class="logo-icon" alt="ING Logo">
+          <span class="logo-text">ING</span>
         </a>
         
         <div class="actions">
           <a href="/" class="employees-link">
             <span class="user-icon">👤</span>
-            <span>Employees</span>
+            <span>${i18n.t('navigation.home')}</span>
           </a>
           
           <a href="/create" class="add-button">
             <span class="add-icon">+</span>
-            <span>Add New</span>
+            <span>${i18n.t('navigation.createEmployee')}</span>
           </a>
           
           <div class="language-switcher">

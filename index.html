@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee Management System</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="module" src="./src/index.js"></script>
     <style>
       body {
@@ -16,5 +17,23 @@
   </head>
   <body>
     <app-root></app-root>
+    
+    <script>
+      const savedLang = localStorage.getItem('app-lang');
+      if (savedLang && (savedLang === 'en' || savedLang === 'tr')) {
+        document.documentElement.lang = savedLang;
+      } else {
+        const browserLang = navigator.language || navigator.userLanguage;
+        if (browserLang && browserLang.startsWith('tr')) {
+          document.documentElement.lang = 'tr';
+        } else {
+          document.documentElement.lang = 'en';
+        }
+      }
+      
+      window.addEventListener('language-changed', (e) => {
+        localStorage.setItem('app-lang', e.detail.lang);
+      });
+    </script>
   </body>
 </html>

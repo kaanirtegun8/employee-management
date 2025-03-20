@@ -54,5 +54,6 @@ export const tr = {
     employeeCreated: 'Çalışan başarıyla oluşturuldu',
     employeeUpdated: 'Çalışan başarıyla güncellendi',
     employeeDeleted: 'Çalışan başarıyla silindi'
-  }
+  },
+  loading: 'Yükleniyor...'
 }; 

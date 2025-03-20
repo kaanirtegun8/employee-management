@@ -4,13 +4,22 @@ import { i18n } from '../../i18n/i18n.js';
 export class EmployeeListHeader extends LitElement {
   static get properties() {
     return {
-      viewMode: { type: String }
+      viewMode: { type: String },
+      lang: { type: String }
     };
   }
   
   constructor() {
     super();
     this.viewMode = 'table';
+    this.lang = document.documentElement.lang || 'en';
+    
+    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+  }
+  
+  _onLanguageChanged(e) {
+    this.lang = e.detail.lang;
+    this.requestUpdate();
   }
   
   static get styles() {

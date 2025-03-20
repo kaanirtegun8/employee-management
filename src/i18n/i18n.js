@@ -8,14 +8,26 @@ class I18nService {
       tr
     };
     
-    const documentLang = document.documentElement.lang || 'en';
-    this.currentLang = documentLang.startsWith('tr') ? 'tr' : 'en';
+    this.updateLanguageFromDocument();
     
-    document.addEventListener('DOMContentLoaded', () => {
-      window.addEventListener('lang-changed', e => {
-        this.setLanguage(e.detail.lang);
-      });
+    window.addEventListener('lang-changed', e => {
+      this.setLanguage(e.detail.lang);
     });
+    
+    if (document.readyState !== 'complete') {
+      document.addEventListener('DOMContentLoaded', () => {
+        this.updateLanguageFromDocument();
+      });
+    }
+  }
+  
+  updateLanguageFromDocument() {
+    const documentLang = document.documentElement.lang || 'en';
+    const lang = documentLang.startsWith('tr') ? 'tr' : 'en';
+    
+    if (this.currentLang !== lang) {
+      this.currentLang = lang;
+    }
   }
   
   t(key) {
@@ -37,6 +49,10 @@ class I18nService {
   setLanguage(lang) {
     if (this.translations[lang]) {
       this.currentLang = lang;
+      
+      document.documentElement.lang = lang;
+      
+      console.log(`Language changed to: ${lang}`);
       
       window.dispatchEvent(new CustomEvent('language-changed', {
         detail: { lang }

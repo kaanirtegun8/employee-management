@@ -54,5 +54,6 @@ export const en = {
     employeeCreated: 'Employee created successfully',
     employeeUpdated: 'Employee updated successfully',
     employeeDeleted: 'Employee deleted successfully'
-  }
+  },
+  loading: 'Loading...'
 }; 
