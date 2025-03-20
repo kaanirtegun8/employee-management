@@ -43,7 +43,7 @@ export const en = {
     invalidPhone: 'Invalid phone number'
   },
   actions: {
-    edit: 'Edit',
+    edit: 'Actions',
     delete: 'Delete',
     confirm: 'Confirm',
     cancel: 'Cancel'

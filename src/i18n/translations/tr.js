@@ -43,7 +43,7 @@ export const tr = {
     invalidPhone: 'Geçersiz telefon numarası'
   },
   actions: {
-    edit: 'Düzenle',
+    edit: 'İşlemler',
     delete: 'Sil',
     confirm: 'Onayla',
     cancel: 'İptal'

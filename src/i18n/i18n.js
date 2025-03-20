@@ -12,7 +12,7 @@ class I18nService {
     this.currentLang = documentLang.startsWith('tr') ? 'tr' : 'en';
     
     document.addEventListener('DOMContentLoaded', () => {
-      document.documentElement.addEventListener('lang-changed', e => {
+      window.addEventListener('lang-changed', e => {
         this.setLanguage(e.detail.lang);
       });
     });
