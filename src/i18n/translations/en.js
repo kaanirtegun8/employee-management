@@ -56,7 +56,8 @@ export const en = {
     confirmUpdate: 'Are you sure you want to update this employee?',
     employeeCreated: 'Employee created successfully',
     employeeUpdated: 'Employee updated successfully',
-    employeeDeleted: 'Employee deleted successfully'
+    employeeDeleted: 'Employee deleted successfully',
+    employeeNotFound: 'Employee not found'
   },
   loading: 'Loading...'
 }; 

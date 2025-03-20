@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit';
 import '../components/layout/app-top-bar.js';
 import '../components/employee/employee-form.js';
 import { i18n } from '../i18n/i18n.js';
+import { store } from '../services/store/store.js';
+import { addEmployee } from '../services/store/actions.js';
 
 export class AddEmployeePage extends LitElement {
   static get properties() {
@@ -15,6 +17,17 @@ export class AddEmployeePage extends LitElement {
     this.lang = document.documentElement.lang || 'en';
     
     window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    this._boundHandleEmployeeCreated = this._handleEmployeeCreated.bind(this);
+  }
+  
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('employee-created', this._boundHandleEmployeeCreated);
+  }
+  
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('employee-created', this._boundHandleEmployeeCreated);
   }
   
   _onLanguageChanged(e) {
@@ -23,9 +36,18 @@ export class AddEmployeePage extends LitElement {
   }
   
   _handleEmployeeCreated(e) {
+    e.stopPropagation();
     const newEmployee = e.detail.employee;
-    console.log('New employee created:', newEmployee);
     
+    try {
+      const action = addEmployee(newEmployee);
+      
+      store.dispatch(action);
+
+      alert(i18n.t('messages.employeeCreated'));
+    } catch (error) {
+      alert('Error creating employee. See console for details.');
+    }
   }
   
   static get styles() {

@@ -15,7 +15,7 @@ export class EmployeeForm extends LitElement {
   
   constructor() {
     super();
-    this.employee = {};
+    this.employee = null;
     this.isEditMode = false;
     this.lang = document.documentElement.lang || 'en';
     this.formData = this._getDefaultFormData();
@@ -43,7 +43,8 @@ export class EmployeeForm extends LitElement {
   }
   
   updated(changedProperties) {
-    if (changedProperties.has('employee') && this.employee) {
+    if (changedProperties.has('employee') && this.employee && Object.keys(this.employee).length > 0) {
+      console.log('Employee data detected, switching to edit mode:', this.employee);
       this.isEditMode = true;
       this.formData = { ...this.employee };
     }
@@ -171,7 +172,7 @@ export class EmployeeForm extends LitElement {
       newErrors.email = i18n.t('validation.invalidEmail');
     }
     
-    if (this.formData.phoneNumber && !/^\+[0-9\s]{10,15}$/.test(this.formData.phoneNumber)) {
+    if (this.formData.phoneNumber && !/^\+[0-9\s]{10,20}$/.test(this.formData.phoneNumber)) {
       newErrors.phoneNumber = i18n.t('validation.invalidPhone');
     }
     
@@ -181,16 +182,22 @@ export class EmployeeForm extends LitElement {
   
   _handleSubmit(e) {
     e.preventDefault();
+    console.log('Form submitted, validating...', 'isEditMode:', this.isEditMode, 'employee:', this.employee);
     
     if (!this._validateForm()) {
+      console.log('Form validation failed');
       return;
     }
     
+    console.log('Form validation passed');
     if (this.isEditMode) {
+      console.log('Edit mode detected, confirming update...');
       if (confirm(i18n.t('messages.confirmUpdate'))) {
+        console.log('Update confirmed, calling _updateEmployee');
         this._updateEmployee();
       }
     } else {
+      console.log('Create mode detected, calling _createEmployee');
       this._createEmployee();
     }
   }
@@ -206,13 +213,16 @@ export class EmployeeForm extends LitElement {
   }
   
   _createEmployee() {
+    console.log('_createEmployee called with formData:', this.formData);
     this.dispatchEvent(new CustomEvent('employee-created', {
       detail: { employee: this.formData },
       bubbles: true,
       composed: true
     }));
     
-    router.navigate('/');
+    setTimeout(() => {
+      router.navigate('/?refresh=' + new Date().getTime());
+    }, 100);
   }
   
   _handleCancel() {
