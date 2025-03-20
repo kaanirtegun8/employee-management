@@ -5,7 +5,8 @@ export class EmployeeListHeader extends LitElement {
   static get properties() {
     return {
       viewMode: { type: String },
-      lang: { type: String }
+      lang: { type: String },
+      isMobile: { type: Boolean }
     };
   }
   
@@ -13,6 +14,7 @@ export class EmployeeListHeader extends LitElement {
     super();
     this.viewMode = 'table';
     this.lang = document.documentElement.lang || 'en';
+    this.isMobile = false;
     
     window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
   }
@@ -73,6 +75,22 @@ export class EmployeeListHeader extends LitElement {
         border: 1px solid #ddd;
         border-radius: 4px;
         font-size: 0.9rem;
+      }
+      
+      @media (max-width: 767px) {
+        .list-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+        
+        .title {
+          font-size: 1.2rem;
+        }
+        
+        .view-controls {
+          display: none;
+        }
       }
     `;
   }

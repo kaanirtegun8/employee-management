@@ -15,7 +15,8 @@ export class EmployeeListPage extends LitElement {
       viewMode: { type: String },
       currentPage: { type: Number },
       pageSize: { type: Number },
-      searchQuery: { type: String }
+      searchQuery: { type: String },
+      isMobile: { type: Boolean }
     };
   }
   
@@ -28,6 +29,24 @@ export class EmployeeListPage extends LitElement {
     this.currentPage = 1;
     this.pageSize = 10;
     this.searchQuery = '';
+    this.isMobile = window.innerWidth < 768;
+    
+    this._resizeHandler = this._handleResize.bind(this);
+    window.addEventListener('resize', this._resizeHandler);
+  }
+  
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('resize', this._resizeHandler);
+  }
+  
+  _handleResize() {
+    const wasMobile = this.isMobile;
+    this.isMobile = window.innerWidth < 768;
+    
+    if (!wasMobile && this.isMobile) {
+      this.viewMode = 'list';
+    }
   }
   
   static get styles() {
@@ -161,7 +180,11 @@ export class EmployeeListPage extends LitElement {
   }
   
   _onViewModeChanged(e) {
-    this.viewMode = e.detail.mode;
+    if (!this.isMobile) {
+      this.viewMode = e.detail.mode;
+    } else {
+      this.viewMode = 'list';
+    }
   }
   
   _onSearch(e) {
@@ -187,16 +210,7 @@ export class EmployeeListPage extends LitElement {
   _renderEmployeeView() {
     const currentEmployees = this._getCurrentPageEmployees();
     
-    if (this.viewMode === 'table') {
-      return html`
-        <employee-table
-          .employees=${currentEmployees}
-          .loading=${this.loading}
-          @edit-employee=${this._onEditEmployee}
-          @delete-employee=${this._onDeleteEmployee}
-        ></employee-table>
-      `;
-    } else {
+    if (this.isMobile || this.viewMode === 'list') {
       return html`
         <employee-list
           .employees=${currentEmployees}
@@ -204,6 +218,15 @@ export class EmployeeListPage extends LitElement {
           @edit-employee=${this._onEditEmployee}
           @delete-employee=${this._onDeleteEmployee}
         ></employee-list>
+      `;
+    } else {
+      return html`
+        <employee-table
+          .employees=${currentEmployees}
+          .loading=${this.loading}
+          @edit-employee=${this._onEditEmployee}
+          @delete-employee=${this._onDeleteEmployee}
+        ></employee-table>
       `;
     }
   }
@@ -216,6 +239,7 @@ export class EmployeeListPage extends LitElement {
         <div class="page-content">
           <employee-list-header
             .viewMode=${this.viewMode}
+            .isMobile=${this.isMobile}
             @view-mode-changed=${this._onViewModeChanged}
             @search=${this._onSearch}
           ></employee-list-header>
