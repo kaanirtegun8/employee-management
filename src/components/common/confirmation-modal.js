@@ -1,4 +1,6 @@
 import { LitElement, html, css } from 'lit';
+import { i18n } from '../../i18n/i18n.js';
+import { Language, Events } from '../../constants/enums.js';
 
 export class ConfirmationModal extends LitElement {
   static get properties() {
@@ -6,7 +8,8 @@ export class ConfirmationModal extends LitElement {
       isOpen: { type: Boolean, reflect: true },
       message: { type: String },
       onConfirm: { attribute: false },
-      onCancel: { attribute: false }
+      onCancel: { attribute: false },
+      lang: { type: String }
     };
   }
 
@@ -14,6 +17,19 @@ export class ConfirmationModal extends LitElement {
     super();
     this.isOpen = false;
     this.message = '';
+    this.lang = document.documentElement.lang || Language.EN;
+    
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
+  }
+
+  _onLanguageChanged(e) {
+    this.lang = e.detail.lang;
+    this.requestUpdate();
   }
 
   static get styles() {
@@ -143,17 +159,17 @@ export class ConfirmationModal extends LitElement {
       <div class="wrapper" @click=${this.onCancel}>
         <div class="dialog" @click=${(e) => e.stopPropagation()}>
           <div class="header">
-            <h3 class="title">Are you sure?</h3>
+            <h3 class="title">${i18n.t('messages.confirmTitle')}</h3>
             <button class="close-button" @click=${this.onCancel}>×</button>
           </div>
           <div class="content">
             <div class="message">${this.message}</div>
             <div class="buttons">
               <button class="confirm-button" @click=${this.onConfirm}>
-                Proceed
+                ${i18n.t('actions.confirm')}
               </button>
               <button class="cancel-button" @click=${this.onCancel}>
-                Cancel
+                ${i18n.t('actions.cancel')}
               </button>
             </div>
           </div>

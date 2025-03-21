@@ -48,10 +48,11 @@ export const en = {
   actions: {
     edit: 'Actions',
     delete: 'Delete',
-    confirm: 'Confirm',
+    confirm: 'Proceed',
     cancel: 'Cancel'
   },
   messages: {
+    confirmTitle: 'Are you sure?',
     confirmDelete: 'Are you sure you want to delete this employee?',
     confirmUpdate: 'Are you sure you want to update this employee?',
     employeeCreated: 'Employee created successfully',

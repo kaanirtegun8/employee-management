@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
+import { Events, ViewMode, Language } from '../../constants/enums.js';
 
 export class EmployeeListHeader extends LitElement {
   static get properties() {
@@ -12,11 +13,11 @@ export class EmployeeListHeader extends LitElement {
   
   constructor() {
     super();
-    this.viewMode = 'table';
-    this.lang = document.documentElement.lang || 'en';
+    this.viewMode = ViewMode.TABLE;
+    this.lang = document.documentElement.lang || Language.EN;
     this.isMobile = false;
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   _onLanguageChanged(e) {
@@ -119,14 +120,14 @@ export class EmployeeListHeader extends LitElement {
         
         <div class="view-controls">
           <button 
-            class="view-button ${this.viewMode === 'table' ? 'active' : ''}" 
-            @click=${() => this._handleViewChange('table')}
+            class="view-button ${this.viewMode === ViewMode.TABLE ? 'active' : ''}" 
+            @click=${() => this._handleViewChange(ViewMode.TABLE)}
             title="${i18n.t('employeeList.table')}">
             ☰
           </button>
           <button 
-            class="view-button ${this.viewMode === 'list' ? 'active' : ''}" 
-            @click=${() => this._handleViewChange('list')}
+            class="view-button ${this.viewMode === ViewMode.LIST ? 'active' : ''}" 
+            @click=${() => this._handleViewChange(ViewMode.LIST)}
             title="${i18n.t('employeeList.list')}">
             ⊞
           </button>

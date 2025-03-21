@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
 import { router } from '../../services/router-service.js';
 import '../common/confirmation-modal.js';
+import { EmployeeFields, Department, Position, Language, Events } from '../../constants/enums.js';
+import { isValidEmail, isValidPhone, validateRequired, getEmailValidationKey, getPhoneValidationKey } from '../../utils/validation.js';
 
 export class EmployeeForm extends LitElement {
   static get properties() {
@@ -20,31 +22,27 @@ export class EmployeeForm extends LitElement {
     super();
     this.employee = null;
     this.isEditMode = false;
-    this.lang = document.documentElement.lang || 'en';
-    this.formData = this._getDefaultFormData();
+    this.lang = document.documentElement.lang || Language.EN;
+    this.formData = {
+      [EmployeeFields.FIRST_NAME]: '',
+      [EmployeeFields.LAST_NAME]: '',
+      [EmployeeFields.DATE_OF_EMPLOYMENT]: '',
+      [EmployeeFields.DATE_OF_BIRTH]: '',
+      [EmployeeFields.PHONE_NUMBER]: '',
+      [EmployeeFields.EMAIL]: '',
+      [EmployeeFields.DEPARTMENT]: '',
+      [EmployeeFields.POSITION]: ''
+    };
     this.errors = {};
     this.showConfirmModal = false;
     this.confirmMessage = '';
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   _onLanguageChanged(e) {
     this.lang = e.detail.lang;
     this.requestUpdate();
-  }
-  
-  _getDefaultFormData() {
-    return {
-      firstName: '',
-      lastName: '',
-      dateOfEmployment: '',
-      dateOfBirth: '',
-      phoneNumber: '',
-      email: '',
-      department: '',
-      position: ''
-    };
   }
   
   updated(changedProperties) {
@@ -162,26 +160,23 @@ export class EmployeeForm extends LitElement {
   }
   
   _validateForm() {
-    const newErrors = {};
+    const errors = validateRequired(this.formData, Object.values(EmployeeFields));
     
-    const requiredFields = ['firstName', 'lastName', 'dateOfEmployment', 'dateOfBirth', 'phoneNumber', 'email', 'department', 'position'];
-    
-    requiredFields.forEach(field => {
-      if (!this.formData[field]) {
-        newErrors[field] = i18n.t('validation.required');
-      }
+    const translatedErrors = {};
+    Object.entries(errors).forEach(([field, messageKey]) => {
+      translatedErrors[field] = i18n.t(messageKey);
     });
     
-    if (this.formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email)) {
-      newErrors.email = i18n.t('validation.invalidEmail');
+    if (!isValidEmail(this.formData[EmployeeFields.EMAIL])) {
+      translatedErrors[EmployeeFields.EMAIL] = i18n.t(getEmailValidationKey());
     }
     
-    if (this.formData.phoneNumber && !/^\+[0-9\s]{10,20}$/.test(this.formData.phoneNumber)) {
-      newErrors.phoneNumber = i18n.t('validation.invalidPhone');
+    if (!isValidPhone(this.formData[EmployeeFields.PHONE_NUMBER])) {
+      translatedErrors[EmployeeFields.PHONE_NUMBER] = i18n.t(getPhoneValidationKey());
     }
     
-    this.errors = newErrors;
-    return Object.keys(newErrors).length === 0;
+    this.errors = translatedErrors;
+    return Object.keys(translatedErrors).length === 0;
   }
   
   _handleSubmit(e) {
@@ -239,115 +234,115 @@ export class EmployeeForm extends LitElement {
       <div class="form-container">
         <form @submit=${this._handleSubmit}>
           <div class="form-group">
-            <label class="form-label" for="firstName">${i18n.t('employeeForm.firstName')}</label>
+            <label class="form-label" for="${EmployeeFields.FIRST_NAME}">${i18n.t('employeeForm.firstName')}</label>
             <input 
               type="text" 
-              id="firstName" 
-              name="firstName" 
+              id="${EmployeeFields.FIRST_NAME}" 
+              name="${EmployeeFields.FIRST_NAME}" 
               class="form-input" 
-              .value=${this.formData.firstName || ''} 
+              .value=${this.formData[EmployeeFields.FIRST_NAME] || ''} 
               @input=${this._handleInputChange}
             />
-            ${this.errors.firstName ? html`<div class="form-error">${this.errors.firstName}</div>` : ''}
+            ${this.errors[EmployeeFields.FIRST_NAME] ? html`<div class="form-error">${this.errors[EmployeeFields.FIRST_NAME]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="lastName">${i18n.t('employeeForm.lastName')}</label>
+            <label class="form-label" for="${EmployeeFields.LAST_NAME}">${i18n.t('employeeForm.lastName')}</label>
             <input 
               type="text" 
-              id="lastName" 
-              name="lastName" 
+              id="${EmployeeFields.LAST_NAME}" 
+              name="${EmployeeFields.LAST_NAME}" 
               class="form-input" 
-              .value=${this.formData.lastName || ''} 
+              .value=${this.formData[EmployeeFields.LAST_NAME] || ''} 
               @input=${this._handleInputChange}
             />
-            ${this.errors.lastName ? html`<div class="form-error">${this.errors.lastName}</div>` : ''}
+            ${this.errors[EmployeeFields.LAST_NAME] ? html`<div class="form-error">${this.errors[EmployeeFields.LAST_NAME]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="dateOfEmployment">${i18n.t('employeeForm.dateOfEmployment')}</label>
+            <label class="form-label" for="${EmployeeFields.DATE_OF_EMPLOYMENT}">${i18n.t('employeeForm.dateOfEmployment')}</label>
             <input 
               type="date" 
-              id="dateOfEmployment" 
-              name="dateOfEmployment" 
+              id="${EmployeeFields.DATE_OF_EMPLOYMENT}" 
+              name="${EmployeeFields.DATE_OF_EMPLOYMENT}" 
               class="form-input" 
-              .value=${this.formData.dateOfEmployment || ''} 
+              .value=${this.formData[EmployeeFields.DATE_OF_EMPLOYMENT] || ''} 
               @input=${this._handleInputChange}
             />
-            ${this.errors.dateOfEmployment ? html`<div class="form-error">${this.errors.dateOfEmployment}</div>` : ''}
+            ${this.errors[EmployeeFields.DATE_OF_EMPLOYMENT] ? html`<div class="form-error">${this.errors[EmployeeFields.DATE_OF_EMPLOYMENT]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="dateOfBirth">${i18n.t('employeeForm.dateOfBirth')}</label>
+            <label class="form-label" for="${EmployeeFields.DATE_OF_BIRTH}">${i18n.t('employeeForm.dateOfBirth')}</label>
             <input 
               type="date" 
-              id="dateOfBirth" 
-              name="dateOfBirth" 
+              id="${EmployeeFields.DATE_OF_BIRTH}" 
+              name="${EmployeeFields.DATE_OF_BIRTH}" 
               class="form-input" 
-              .value=${this.formData.dateOfBirth || ''} 
+              .value=${this.formData[EmployeeFields.DATE_OF_BIRTH] || ''} 
               @input=${this._handleInputChange}
             />
-            ${this.errors.dateOfBirth ? html`<div class="form-error">${this.errors.dateOfBirth}</div>` : ''}
+            ${this.errors[EmployeeFields.DATE_OF_BIRTH] ? html`<div class="form-error">${this.errors[EmployeeFields.DATE_OF_BIRTH]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="phoneNumber">${i18n.t('employeeForm.phoneNumber')}</label>
+            <label class="form-label" for="${EmployeeFields.PHONE_NUMBER}">${i18n.t('employeeForm.phoneNumber')}</label>
             <input 
               type="tel" 
-              id="phoneNumber" 
-              name="phoneNumber" 
+              id="${EmployeeFields.PHONE_NUMBER}" 
+              name="${EmployeeFields.PHONE_NUMBER}" 
               class="form-input" 
               placeholder="+90 XXX XXX XX XX"
-              .value=${this.formData.phoneNumber || ''} 
+              .value=${this.formData[EmployeeFields.PHONE_NUMBER] || ''} 
               @input=${this._handleInputChange}
             />
-            ${this.errors.phoneNumber ? html`<div class="form-error">${this.errors.phoneNumber}</div>` : ''}
+            ${this.errors[EmployeeFields.PHONE_NUMBER] ? html`<div class="form-error">${this.errors[EmployeeFields.PHONE_NUMBER]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="email">${i18n.t('employeeForm.email')}</label>
+            <label class="form-label" for="${EmployeeFields.EMAIL}">${i18n.t('employeeForm.email')}</label>
             <input 
               type="email" 
-              id="email" 
-              name="email" 
+              id="${EmployeeFields.EMAIL}" 
+              name="${EmployeeFields.EMAIL}" 
               class="form-input" 
-              .value=${this.formData.email || ''} 
+              .value=${this.formData[EmployeeFields.EMAIL] || ''} 
               @input=${this._handleInputChange}
             />
-            ${this.errors.email ? html`<div class="form-error">${this.errors.email}</div>` : ''}
+            ${this.errors[EmployeeFields.EMAIL] ? html`<div class="form-error">${this.errors[EmployeeFields.EMAIL]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="department">${i18n.t('employeeForm.department')}</label>
+            <label class="form-label" for="${EmployeeFields.DEPARTMENT}">${i18n.t('employeeForm.department')}</label>
             <select 
-              id="department" 
-              name="department" 
+              id="${EmployeeFields.DEPARTMENT}" 
+              name="${EmployeeFields.DEPARTMENT}" 
               class="form-select" 
-              .value=${this.formData.department || ''} 
+              .value=${this.formData[EmployeeFields.DEPARTMENT] || ''} 
               @change=${this._handleInputChange}
             >
               <option value="" disabled selected>${i18n.t('employeeForm.selectDepartment')}</option>
-              <option value="analytics">${i18n.t('departments.analytics')}</option>
-              <option value="tech">${i18n.t('departments.tech')}</option>
+              <option value="${Department.ANALYTICS}">${i18n.t('departments.analytics')}</option>
+              <option value="${Department.TECH}">${i18n.t('departments.tech')}</option>
             </select>
-            ${this.errors.department ? html`<div class="form-error">${this.errors.department}</div>` : ''}
+            ${this.errors[EmployeeFields.DEPARTMENT] ? html`<div class="form-error">${this.errors[EmployeeFields.DEPARTMENT]}</div>` : ''}
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="position">${i18n.t('employeeForm.position')}</label>
+            <label class="form-label" for="${EmployeeFields.POSITION}">${i18n.t('employeeForm.position')}</label>
             <select 
-              id="position" 
-              name="position" 
+              id="${EmployeeFields.POSITION}" 
+              name="${EmployeeFields.POSITION}" 
               class="form-select" 
-              .value=${this.formData.position || ''} 
+              .value=${this.formData[EmployeeFields.POSITION] || ''} 
               @change=${this._handleInputChange}
             >
               <option value="" disabled selected>${i18n.t('employeeForm.selectPosition')}</option>
-              <option value="junior">${i18n.t('positions.junior')}</option>
-              <option value="medior">${i18n.t('positions.medior')}</option>
-              <option value="senior">${i18n.t('positions.senior')}</option>
+              <option value="${Position.JUNIOR}">${i18n.t('positions.junior')}</option>
+              <option value="${Position.MEDIOR}">${i18n.t('positions.medior')}</option>
+              <option value="${Position.SENIOR}">${i18n.t('positions.senior')}</option>
             </select>
-            ${this.errors.position ? html`<div class="form-error">${this.errors.position}</div>` : ''}
+            ${this.errors[EmployeeFields.POSITION] ? html`<div class="form-error">${this.errors[EmployeeFields.POSITION]}</div>` : ''}
           </div>
           
           <div class="form-buttons">

@@ -5,6 +5,7 @@ import { i18n } from '../i18n/i18n.js';
 import { store } from '../services/store/store.js';
 import { updateEmployee } from '../services/store/actions.js';
 import { router } from '../services/router-service.js';
+import { Events, Language } from '../constants/enums.js';
 
 export class EditEmployeePage extends LitElement {
   static get properties() {
@@ -20,10 +21,10 @@ export class EditEmployeePage extends LitElement {
     super();
     this.employeeId = '';
     this.employeeData = null;
-    this.lang = document.documentElement.lang || 'en';
+    this.lang = document.documentElement.lang || Language.EN;
     this.loading = true;
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   _onLanguageChanged(e) {

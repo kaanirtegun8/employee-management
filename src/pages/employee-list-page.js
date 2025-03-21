@@ -10,7 +10,7 @@ import { i18n } from '../i18n/i18n.js';
 import { store } from '../services/store/store.js';
 import { deleteEmployee } from '../services/store/actions.js';
 import { router } from '../services/router-service.js';
-
+import { ViewMode } from '../constants/enums.js';
 export class EmployeeListPage extends LitElement {
   static get properties() {
     return {
@@ -33,7 +33,7 @@ export class EmployeeListPage extends LitElement {
     this.employees = [];
     this.filteredEmployees = [];
     this.loading = true;
-    this.viewMode = 'table';
+    this.viewMode = ViewMode.TABLE;
     this.currentPage = 1;
     this.pageSize = 10;
     this.searchQuery = '';
@@ -67,9 +67,9 @@ export class EmployeeListPage extends LitElement {
     
     if (wasMobile !== this.isMobile) {
       if (this.isMobile) {
-        this.viewMode = 'list';
-      } else if (this.viewMode === 'list') {
-        this.viewMode = 'table';
+        this.viewMode = ViewMode.LIST;
+      } else if (this.viewMode === ViewMode.LIST) {
+        this.viewMode = ViewMode.TABLE;
       }
       this.requestUpdate();
     }
@@ -255,7 +255,7 @@ export class EmployeeListPage extends LitElement {
       `;
     }
     
-    if (this.isMobile || this.viewMode === 'list') {
+    if (this.isMobile || this.viewMode === ViewMode.LIST) {
       return html`
         <employee-list
           .employees=${currentEmployees}
@@ -295,11 +295,11 @@ export class EmployeeListPage extends LitElement {
         
         ${totalPages > 1 ? html`
           <div class="pagination-container">
-            <pagination-component
+            <app-pagination
               .currentPage=${this.currentPage}
               .totalPages=${totalPages}
               @page-changed=${this._onPageChanged}
-            ></pagination-component>
+            ></app-pagination>
           </div>
         ` : ''}
       </div>
