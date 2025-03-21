@@ -20,7 +20,8 @@ export default {
     dir: 'dist',
     format: 'esm',
     sourcemap: mode === 'dev',
-    entryFileNames: '[name].bundled.js',
+    chunkFileNames: '[name]-[hash].js',
+    entryFileNames: 'app.bundled.js',
   },
   onwarn(warning) {
     if (warning.code !== 'THIS_IS_UNDEFINED') {
