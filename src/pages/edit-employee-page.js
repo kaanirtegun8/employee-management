@@ -49,7 +49,6 @@ export class EditEmployeePage extends LitElement {
     } else {
       console.error(`Employee with ID ${id} not found`);
       setTimeout(() => {
-        alert(i18n.t('messages.employeeNotFound'));
         router.navigate('/');
       }, 500);
     }
@@ -60,8 +59,6 @@ export class EditEmployeePage extends LitElement {
     
     const id = parseInt(this.employeeId, 10);
     store.dispatch(updateEmployee(id, updatedEmployee));
-    
-    alert(i18n.t('messages.employeeUpdated'));
   }
   
   static get styles() {

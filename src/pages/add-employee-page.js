@@ -43,10 +43,8 @@ export class AddEmployeePage extends LitElement {
       const action = addEmployee(newEmployee);
       
       store.dispatch(action);
-
-      alert(i18n.t('messages.employeeCreated'));
     } catch (error) {
-      alert('Error creating employee. See console for details.');
+      console.error('Error creating employee. See console for details.', error);
     }
   }
   
