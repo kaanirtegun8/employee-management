@@ -111,7 +111,6 @@ suite('EmployeeForm', () => {
     expect(eventSpy).to.have.been.calledOnce;
     expect(eventSpy.firstCall.args[0].detail).to.deep.equal({ employee: validEmployee });
     
-    // Wait for navigation
     await new Promise(resolve => setTimeout(resolve, 150));
     expect(routerNavigateStub).to.have.been.calledWith('/');
   });
