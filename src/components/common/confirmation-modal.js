@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
+import { Language } from '../../constants/enums.js';
 
 export class ConfirmationModal extends LitElement {
   static get properties() {
@@ -16,7 +17,7 @@ export class ConfirmationModal extends LitElement {
     super();
     this.isOpen = false;
     this.message = '';
-    this.lang = document.documentElement.lang || 'en';
+    this.lang = document.documentElement.lang || Language.EN;
     
     window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
   }
