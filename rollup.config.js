@@ -9,11 +9,18 @@ import {terser} from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 
+const mode = process.env.MODE || 'dev';
+if (!['dev', 'prod'].includes(mode)) {
+  throw new Error(`MODE must be "dev" or "prod", was "${mode}"`);
+}
+
 export default {
-  input: 'my-element.js',
+  input: 'src/app.js',
   output: {
-    file: 'my-element.bundled.js',
+    dir: 'dist',
     format: 'esm',
+    sourcemap: mode === 'dev',
+    entryFileNames: '[name].bundled.js',
   },
   onwarn(warning) {
     if (warning.code !== 'THIS_IS_UNDEFINED') {
@@ -21,13 +28,13 @@ export default {
     }
   },
   plugins: [
-    replace({preventAssignment: false, 'Reflect.decorate': 'undefined'}),
+    replace({
+      preventAssignment: false,
+      'Reflect.decorate': 'undefined',
+      'process.env.NODE_ENV': JSON.stringify(mode),
+    }),
     resolve(),
-    /**
-     * This minification setup serves the static site generation.
-     * For bundling and minification, check the README.md file.
-     */
-    terser({
+    mode === 'prod' && terser({
       ecma: 2021,
       module: true,
       warnings: true,
@@ -38,5 +45,5 @@ export default {
       },
     }),
     summary(),
-  ],
+  ].filter(Boolean),
 };
