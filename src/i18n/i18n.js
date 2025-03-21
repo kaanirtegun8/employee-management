@@ -1,6 +1,6 @@
 import { en } from './translations/en.js';
 import { tr } from './translations/tr.js';
-import { Events } from '../constants/enums.js';
+import { Events, Language } from '../constants/enums.js';
 
 class I18nService {
   constructor() {
@@ -23,8 +23,8 @@ class I18nService {
   }
   
   updateLanguageFromDocument() {
-    const documentLang = document.documentElement.lang || 'en';
-    const lang = documentLang.startsWith('tr') ? 'tr' : 'en';
+    const documentLang = document.documentElement.lang || Language.EN;
+    const lang = documentLang.startsWith(Language.TR) ? Language.TR : Language.EN;
     
     if (this.currentLang !== lang) {
       this.currentLang = lang;
