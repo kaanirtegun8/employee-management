@@ -295,11 +295,11 @@ export class EmployeeListPage extends LitElement {
         
         ${totalPages > 1 ? html`
           <div class="pagination-container">
-            <pagination-component
+            <app-pagination
               .currentPage=${this.currentPage}
               .totalPages=${totalPages}
               @page-changed=${this._onPageChanged}
-            ></pagination-component>
+            ></app-pagination>
           </div>
         ` : ''}
       </div>

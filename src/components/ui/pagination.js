@@ -88,15 +88,15 @@ export class Pagination extends LitElement {
   }
   
   _getVisiblePages() {
-    const halfVisible = Math.floor(this.visiblePageCount / 2);
-    let start = Math.max(this.currentPage - halfVisible, 1);
-    let end = Math.min(start + this.visiblePageCount - 1, this.totalPages);
+    const visibleRange = this.visiblePageCount - 1;
+    const halfRange = Math.floor(visibleRange / 2);
     
-    if (end - start + 1 < this.visiblePageCount) {
-      start = Math.max(end - this.visiblePageCount + 1, 1);
-    }
+    const startPage = Math.max(1, this.currentPage - halfRange);
+    const endPage = Math.min(this.totalPages, startPage + visibleRange);
     
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    const adjustedStart = Math.max(1, endPage - visibleRange);
+    
+    return [...Array(endPage - adjustedStart + 1)].map((_, index) => adjustedStart + index);
   }
   
   render() {
