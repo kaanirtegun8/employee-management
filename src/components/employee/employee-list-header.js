@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
-
+import { Events } from '../../constants/enums.js';
 export class EmployeeListHeader extends LitElement {
   static get properties() {
     return {
@@ -16,7 +16,7 @@ export class EmployeeListHeader extends LitElement {
     this.lang = document.documentElement.lang || 'en';
     this.isMobile = false;
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   _onLanguageChanged(e) {

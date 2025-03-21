@@ -4,6 +4,7 @@ import '../components/employee/employee-form.js';
 import { i18n } from '../i18n/i18n.js';
 import { store } from '../services/store/store.js';
 import { addEmployee } from '../services/store/actions.js';
+import { Events } from '../constants/enums.js';
 
 export class AddEmployeePage extends LitElement {
   static get properties() {
@@ -16,7 +17,7 @@ export class AddEmployeePage extends LitElement {
     super();
     this.lang = document.documentElement.lang || 'en';
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
     this._boundHandleEmployeeCreated = this._handleEmployeeCreated.bind(this);
   }
   

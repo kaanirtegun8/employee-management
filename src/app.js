@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { router } from './services/router-service.js';
 import { routes } from './routes/routes.js';
 import { Router } from '@vaadin/router';
+import { Events } from './constants/enums.js';
 
 export class App extends LitElement {
   static get properties() {
@@ -26,7 +27,7 @@ export class App extends LitElement {
     this.lang = document.documentElement.lang || 'en';
     this.createRenderRoot();
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   _onLanguageChanged(e) {

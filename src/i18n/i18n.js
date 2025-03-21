@@ -1,5 +1,6 @@
 import { en } from './translations/en.js';
 import { tr } from './translations/tr.js';
+import { Events } from '../constants/enums.js';
 
 class I18nService {
   constructor() {
@@ -10,7 +11,7 @@ class I18nService {
     
     this.updateLanguageFromDocument();
     
-    window.addEventListener('lang-changed', e => {
+    window.addEventListener(Events.LANG_CHANGED, e => {
       this.setLanguage(e.detail.lang);
     });
     
@@ -52,7 +53,7 @@ class I18nService {
       
       document.documentElement.lang = lang;
       
-      window.dispatchEvent(new CustomEvent('language-changed', {
+      window.dispatchEvent(new CustomEvent(Events.LANGUAGE_CHANGED, {
         detail: { lang }
       }));
     } else {

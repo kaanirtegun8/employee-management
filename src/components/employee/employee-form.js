@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
 import { router } from '../../services/router-service.js';
 import '../common/confirmation-modal.js';
+import { Language, Events } from '../../constants/enums.js';
 
 export class EmployeeForm extends LitElement {
   static get properties() {
@@ -20,13 +21,13 @@ export class EmployeeForm extends LitElement {
     super();
     this.employee = null;
     this.isEditMode = false;
-    this.lang = document.documentElement.lang || 'en';
+    this.lang = document.documentElement.lang || Language.EN;
     this.formData = this._getDefaultFormData();
     this.errors = {};
     this.showConfirmModal = false;
     this.confirmMessage = '';
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   _onLanguageChanged(e) {

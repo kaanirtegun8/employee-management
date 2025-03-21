@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
+import { Events } from '../../constants/enums.js';
 
 export class AppTopBar extends LitElement {
   static get properties() {
@@ -12,7 +13,7 @@ export class AppTopBar extends LitElement {
     super();
     this.currentLang = document.documentElement.lang || 'en';
     
-    window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
+    window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   connectedCallback() {
