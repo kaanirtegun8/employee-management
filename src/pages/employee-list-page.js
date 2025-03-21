@@ -212,11 +212,6 @@ export class EmployeeListPage extends LitElement {
     this.currentPage = e.detail.page;
   }
   
-  _onEditEmployee(e) {
-    const employee = e.detail.employee;
-    console.log(`Edit employee: ${employee.id}`);
-  }
-  
   _onDeleteEmployee(e) {
     const employee = e.detail.employee;
     this.employeeToDelete = employee;

@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
 import { router } from '../../services/router-service.js';
+import '../common/confirmation-modal.js';
 
 export class EmployeeForm extends LitElement {
   static get properties() {
@@ -9,7 +10,9 @@ export class EmployeeForm extends LitElement {
       isEditMode: { type: Boolean },
       lang: { type: String },
       formData: { type: Object },
-      errors: { type: Object }
+      errors: { type: Object },
+      showConfirmModal: { type: Boolean },
+      confirmMessage: { type: String }
     };
   }
   
@@ -20,6 +23,8 @@ export class EmployeeForm extends LitElement {
     this.lang = document.documentElement.lang || 'en';
     this.formData = this._getDefaultFormData();
     this.errors = {};
+    this.showConfirmModal = false;
+    this.confirmMessage = '';
     
     window.addEventListener('language-changed', this._onLanguageChanged.bind(this));
   }
@@ -181,24 +186,26 @@ export class EmployeeForm extends LitElement {
   
   _handleSubmit(e) {
     e.preventDefault();
-    console.log('Form submitted, validating...', 'isEditMode:', this.isEditMode, 'employee:', this.employee);
-    
+
     if (!this._validateForm()) {
-      console.log('Form validation failed');
       return;
     }
     
-    console.log('Form validation passed');
     if (this.isEditMode) {
-      console.log('Edit mode detected, confirming update...');
-      if (confirm(i18n.t('messages.confirmUpdate'))) {
-        console.log('Update confirmed, calling _updateEmployee');
-        this._updateEmployee();
-      }
+      this.confirmMessage = i18n.t('messages.confirmUpdate');
+      this.showConfirmModal = true;
     } else {
-      console.log('Create mode detected, calling _createEmployee');
       this._createEmployee();
     }
+  }
+  
+  _handleConfirmUpdate() {
+    this._updateEmployee();
+    this.showConfirmModal = false;
+  }
+  
+  _handleCancelUpdate() {
+    this.showConfirmModal = false;
   }
   
   _updateEmployee() {
@@ -212,7 +219,6 @@ export class EmployeeForm extends LitElement {
   }
   
   _createEmployee() {
-    console.log('_createEmployee called with formData:', this.formData);
     this.dispatchEvent(new CustomEvent('employee-created', {
       detail: { employee: this.formData },
       bubbles: true,
@@ -354,6 +360,13 @@ export class EmployeeForm extends LitElement {
           </div>
         </form>
       </div>
+
+      <confirmation-modal
+        .isOpen=${this.showConfirmModal}
+        .message=${this.confirmMessage}
+        .onConfirm=${() => this._handleConfirmUpdate()}
+        .onCancel=${() => this._handleCancelUpdate()}
+      ></confirmation-modal>
     `;
   }
 }
