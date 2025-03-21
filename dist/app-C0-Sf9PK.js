@@ -2986,22 +2986,22 @@ const routes = [
   {
     path: '/',
     component: 'employee-list-page',
-    action: () => import('./employee-list-page-BKUx8dwZ.js')
+    action: () => import('./employee-list-page-BPj6TjFX.js')
   },
   {
     path: '/add-new',
     component: 'add-employee-page',
-    action: () => import('./add-employee-page-Cl28zn8C.js')
+    action: () => import('./add-employee-page-LvGevO6a.js')
   },
   {
     path: '/edit-employee/:id',
     component: 'edit-employee-page',
-    action: () => import('./edit-employee-page-DiTNBz9e.js')
+    action: () => import('./edit-employee-page-BlYBRw2s.js')
   },
   {
     path: '(.*)',
     component: 'not-found-page',
-    action: () => import('./not-found-page-DD6KzXzu.js')
+    action: () => import('./not-found-page-hLCNsQnG.js')
   }
 ];
 
@@ -3101,4 +3101,4 @@ class App extends r {
 customElements.define('app-root', App);
 
 export { App as A, Department as D, Events as E, Language as L, Position as P, StorageKeys as S, ViewMode as V, router as a, EmployeeFields as b, i$3 as i, r, x };
-//# sourceMappingURL=app-DZ_NUhAs.js.map
+//# sourceMappingURL=app-C0-Sf9PK.js.map

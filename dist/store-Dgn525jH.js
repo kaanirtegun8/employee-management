@@ -1,4 +1,4 @@
-import { E as Events, L as Language, r, i, x, S as StorageKeys } from './app-DZ_NUhAs.js';
+import { E as Events, L as Language, r, i, x, S as StorageKeys } from './app-C0-Sf9PK.js';
 
 const en = {
   app: {
@@ -398,7 +398,7 @@ class AppTopBar extends r {
     return x`
       <div class="top-bar">
         <a href="/" class="logo">
-          <img src="/src/assets/images/logo.webp" class="logo-icon" alt="ING Logo">
+          <img src="/assets/images/logo.webp" class="logo-icon" alt="ING Logo">
           <span class="logo-text">ING</span>
         </a>
         
@@ -751,4 +751,4 @@ class Store {
 const store = new Store();
 
 export { addEmployee as a, deleteEmployee as d, i18n as i, store as s, updateEmployee as u };
-//# sourceMappingURL=store-AFfIH_Lu.js.map
+//# sourceMappingURL=store-Dgn525jH.js.map

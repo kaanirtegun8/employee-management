@@ -204,7 +204,7 @@ export class AppTopBar extends LitElement {
     return html`
       <div class="top-bar">
         <a href="/" class="logo">
-          <img src="/src/assets/images/logo.webp" class="logo-icon" alt="ING Logo">
+          <img src="/assets/images/logo.webp" class="logo-icon" alt="ING Logo">
           <span class="logo-text">ING</span>
         </a>
         

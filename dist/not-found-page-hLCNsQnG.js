@@ -1,4 +1,4 @@
-import { r, i, x } from './app-DZ_NUhAs.js';
+import { r, i, x } from './app-C0-Sf9PK.js';
 
 class NotFoundPage extends r {
   static get styles() {
@@ -25,4 +25,4 @@ class NotFoundPage extends r {
 customElements.define('not-found-page', NotFoundPage);
 
 export { NotFoundPage };
-//# sourceMappingURL=not-found-page-DD6KzXzu.js.map
+//# sourceMappingURL=not-found-page-hLCNsQnG.js.map
