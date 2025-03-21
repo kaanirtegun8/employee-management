@@ -27,6 +27,10 @@ export class AppTopBar extends LitElement {
   static get styles() {
     return css`
       :host {
+        @media (max-width: 767px) {
+          position: fixed;
+          z-index: 1000;
+        }
         display: block;
         width: 100%;
         background-color: #ffffff;

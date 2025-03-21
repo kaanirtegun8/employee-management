@@ -5,6 +5,7 @@ import '../components/employee/employee-list-header.js';
 import '../components/employee/employee-table.js';
 import '../components/employee/employee-list.js';
 import '../components/ui/pagination.js';
+import '../components/common/confirmation-modal.js';
 import { i18n } from '../i18n/i18n.js';
 import { store } from '../services/store/store.js';
 import { deleteEmployee } from '../services/store/actions.js';
@@ -20,7 +21,10 @@ export class EmployeeListPage extends LitElement {
       currentPage: { type: Number },
       pageSize: { type: Number },
       searchQuery: { type: String },
-      isMobile: { type: Boolean }
+      isMobile: { type: Boolean },
+      showConfirmModal: { type: Boolean },
+      confirmMessage: { type: String },
+      employeeToDelete: { type: Object }
     };
   }
   
@@ -34,6 +38,9 @@ export class EmployeeListPage extends LitElement {
     this.pageSize = 10;
     this.searchQuery = '';
     this.isMobile = window.innerWidth < 768;
+    this.showConfirmModal = false;
+    this.confirmMessage = '';
+    this.employeeToDelete = null;
     
     this._resizeHandler = this._handleResize.bind(this);
     window.addEventListener('resize', this._resizeHandler);
@@ -82,8 +89,12 @@ export class EmployeeListPage extends LitElement {
         background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1.25rem;
+        padding: 20px;
         margin-bottom: 1rem;
+
+        @media (max-width: 767px) {
+          margin-top: 60px;
+        }
       }
       
       .pagination-container {
@@ -125,6 +136,21 @@ export class EmployeeListPage extends LitElement {
       
       .btn-add:hover {
         background-color: #e55c00;
+      }
+      
+      .test-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 1rem;
+      }
+      
+      .test-button:hover {
+        background-color: #45a049;
       }
     `;
   }
@@ -190,19 +216,26 @@ export class EmployeeListPage extends LitElement {
     this.currentPage = e.detail.page;
   }
   
-  _onEditEmployee(e) {
-    const employee = e.detail.employee;
-    console.log(`Edit employee: ${employee.id}`);
-  }
-  
   _onDeleteEmployee(e) {
     const employee = e.detail.employee;
-    
-    if (confirm(i18n.t('messages.confirmDelete'))) {
-      store.dispatch(deleteEmployee(employee.id));
-      
-      alert(i18n.t('messages.employeeDeleted'));
+    this.employeeToDelete = employee;
+    this.confirmMessage = i18n.t('messages.confirmDelete');
+    this.showConfirmModal = true;
+   
+    this.requestUpdate();
+  }
+  
+  _handleConfirmDelete() {
+    if (this.employeeToDelete) {
+      store.dispatch(deleteEmployee(this.employeeToDelete.id));
+      this.showConfirmModal = false;
+      this.employeeToDelete = null;
     }
+  }
+  
+  _handleCancelDelete() {
+    this.showConfirmModal = false;
+    this.employeeToDelete = null;
   }
   
   _renderEmployeeView() {
@@ -244,29 +277,39 @@ export class EmployeeListPage extends LitElement {
   }
   
   render() {
+    const totalPages = this._getTotalPages();
+    
     return html`
       <app-top-bar></app-top-bar>
       
       <div class="container">
         <div class="page-content">
           <employee-list-header
-            .viewMode=${this.viewMode}
-            .isMobile=${this.isMobile}
             @view-mode-changed=${this._onViewModeChanged}
             @search=${this._onSearch}
+            .viewMode=${this.viewMode}
           ></employee-list-header>
           
           ${this._renderEmployeeView()}
         </div>
         
-        <div class="pagination-container">
-          <app-pagination
-            .currentPage=${this.currentPage}
-            .totalPages=${this._getTotalPages()}
-            @page-changed=${this._onPageChanged}
-          ></app-pagination>
-        </div>
+        ${totalPages > 1 ? html`
+          <div class="pagination-container">
+            <pagination-component
+              .currentPage=${this.currentPage}
+              .totalPages=${totalPages}
+              @page-changed=${this._onPageChanged}
+            ></pagination-component>
+          </div>
+        ` : ''}
       </div>
+
+      <confirmation-modal
+        .isOpen=${this.showConfirmModal}
+        .message=${this.confirmMessage}
+        .onConfirm=${() => this._handleConfirmDelete()}
+        .onCancel=${() => this._handleCancelDelete()}
+      ></confirmation-modal>
     `;
   }
 }
