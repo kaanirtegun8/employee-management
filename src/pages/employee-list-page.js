@@ -65,8 +65,13 @@ export class EmployeeListPage extends LitElement {
     const wasMobile = this.isMobile;
     this.isMobile = window.innerWidth < 768;
     
-    if (!wasMobile && this.isMobile) {
-      this.viewMode = 'list';
+    if (wasMobile !== this.isMobile) {
+      if (this.isMobile) {
+        this.viewMode = 'list';
+      } else if (this.viewMode === 'list') {
+        this.viewMode = 'table';
+      }
+      this.requestUpdate();
     }
   }
   
@@ -91,10 +96,6 @@ export class EmployeeListPage extends LitElement {
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         padding: 20px;
         margin-bottom: 1rem;
-
-        @media (max-width: 767px) {
-          margin-top: 60px;
-        }
       }
       
       .pagination-container {
@@ -201,8 +202,7 @@ export class EmployeeListPage extends LitElement {
   _onViewModeChanged(e) {
     if (!this.isMobile) {
       this.viewMode = e.detail.mode;
-    } else {
-      this.viewMode = 'list';
+      this.requestUpdate();
     }
   }
   
