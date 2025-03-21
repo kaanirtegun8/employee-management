@@ -152,10 +152,9 @@ export class EmployeeForm extends LitElement {
     };
     
     if (this.errors[name]) {
-      this.errors = {
-        ...this.errors,
-        [name]: null
-      };
+      const newErrors = { ...this.errors };
+      delete newErrors[name];
+      this.errors = newErrors;
     }
   }
   
@@ -205,7 +204,7 @@ export class EmployeeForm extends LitElement {
   
   _updateEmployee() {
     this.dispatchEvent(new CustomEvent('employee-updated', {
-      detail: { employee: this.formData },
+      detail: { employee: { ...this.formData } },
       bubbles: true,
       composed: true
     }));
@@ -215,14 +214,12 @@ export class EmployeeForm extends LitElement {
   
   _createEmployee() {
     this.dispatchEvent(new CustomEvent('employee-created', {
-      detail: { employee: this.formData },
+      detail: { employee: { ...this.formData } },
       bubbles: true,
       composed: true
     }));
     
-    setTimeout(() => {
-      router.navigate('/?refresh=' + new Date().getTime());
-    }, 100);
+    router.navigate('/');
   }
   
   _handleCancel() {
