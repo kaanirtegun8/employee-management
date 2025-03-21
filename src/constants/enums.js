@@ -33,4 +33,9 @@ export const Position = Object.freeze({
   JUNIOR: 'junior',
   MEDIOR: 'medior',
   SENIOR: 'senior'
+});
+
+export const StorageKeys = Object.freeze({
+  LANGUAGE: 'app-lang',
+  EMPLOYEES: 'employees'
 }); 

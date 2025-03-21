@@ -1,5 +1,6 @@
 import { employeeReducer } from './reducers.js';
 import { ADD_EMPLOYEE } from './actions.js';
+import { StorageKeys } from '../../constants/enums.js';
 
 class Store {
   constructor() {
@@ -13,7 +14,7 @@ class Store {
   
   _loadEmployeesFromStorage() {
     try {
-      const storedEmployees = localStorage.getItem('employees');
+      const storedEmployees = localStorage.getItem(StorageKeys.EMPLOYEES);
       const parsedEmployees = storedEmployees ? JSON.parse(storedEmployees) : [];
       return parsedEmployees;
     } catch (error) {
@@ -25,7 +26,7 @@ class Store {
   _saveEmployeesToStorage() {
     try {
       const employeesJson = JSON.stringify(this.state.employees);
-      localStorage.setItem('employees', employeesJson);
+      localStorage.setItem(StorageKeys.EMPLOYEES, employeesJson);
     } catch (error) {
       console.error('Error saving to localStorage:', error);
     }

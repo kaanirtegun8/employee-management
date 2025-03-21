@@ -1,7 +1,7 @@
-import { Language, Events } from '../constants/enums.js';
+import { Language, Events, StorageKeys } from '../constants/enums.js';
 
 function initializeLanguage() {
-  const savedLang = localStorage.getItem('app-lang');
+  const savedLang = localStorage.getItem(StorageKeys.LANGUAGE);
   if (savedLang && (savedLang === Language.EN || savedLang === Language.TR)) {
     document.documentElement.lang = savedLang;
   } else {
@@ -14,7 +14,7 @@ function initializeLanguage() {
   }
   
   window.addEventListener(Events.LANGUAGE_CHANGED, (e) => {
-    localStorage.setItem('app-lang', e.detail.lang);
+    localStorage.setItem(StorageKeys.LANGUAGE, e.detail.lang);
   });
 }
 
