@@ -91,6 +91,10 @@ export class EmployeeListPage extends LitElement {
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         padding: 20px;
         margin-bottom: 1rem;
+
+        @media (max-width: 767px) {
+          margin-top: 60px;
+        }
       }
       
       .pagination-container {
