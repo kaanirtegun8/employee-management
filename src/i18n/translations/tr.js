@@ -48,10 +48,11 @@ export const tr = {
   actions: {
     edit: 'İşlemler',
     delete: 'Sil',
-    confirm: 'Onayla',
+    confirm: 'Devam Et',
     cancel: 'İptal'
   },
   messages: {
+    confirmTitle: 'Emin misiniz?',
     confirmDelete: 'Bu çalışanı silmek istediğinizden emin misiniz?',
     confirmUpdate: 'Bu çalışanı güncellemek istediğinizden emin misiniz?',
     employeeCreated: 'Çalışan başarıyla oluşturuldu',
