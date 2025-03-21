@@ -45,7 +45,13 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@vaadin/router": "^1.7.5",
-    "lit": "^3.2.0"
+    "lit": "^3.2.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.18.0",
+    "rollup-plugin-summary": "^2.0.1",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@11ty/eleventy": "^1.0.1",
@@ -53,9 +59,6 @@
     "@babel/eslint-parser": "^7.17.0",
     "@custom-elements-manifest/analyzer": "^0.6.3",
     "@open-wc/testing": "^4.0.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.7",
-    "@rollup/plugin-terser": "^0.4.4",
     "@web/dev-server": "^0.1.31",
     "@web/dev-server-legacy": "^1.0.0",
     "@web/test-runner": "^0.15.0",
@@ -65,10 +68,6 @@
     "eslint": "^8.15.0",
     "lit-analyzer": "^1.2.1",
     "prettier": "^2.6.2",
-    "rimraf": "^3.0.2",
-    "rollup": "^4.18.0",
-    "rollup-plugin-summary": "^2.0.1",
-    "rollup-plugin-terser": "^7.0.2",
     "sinon": "^19.0.4"
   },
   "customElements": "custom-elements.json"
