@@ -5,7 +5,7 @@ import '../components/employee/employee-list-header.js';
 import '../components/employee/employee-table.js';
 import '../components/employee/employee-list.js';
 import '../components/ui/pagination.js';
-import '../components/common/test-modal.js';
+import '../components/common/confirmation-modal.js';
 import { i18n } from '../i18n/i18n.js';
 import { store } from '../services/store/store.js';
 import { deleteEmployee } from '../services/store/actions.js';
@@ -22,7 +22,9 @@ export class EmployeeListPage extends LitElement {
       pageSize: { type: Number },
       searchQuery: { type: String },
       isMobile: { type: Boolean },
-      showTestModal: { type: Boolean }
+      showConfirmModal: { type: Boolean },
+      confirmMessage: { type: String },
+      employeeToDelete: { type: Object }
     };
   }
   
@@ -36,7 +38,9 @@ export class EmployeeListPage extends LitElement {
     this.pageSize = 10;
     this.searchQuery = '';
     this.isMobile = window.innerWidth < 768;
-    this.showTestModal = false;
+    this.showConfirmModal = false;
+    this.confirmMessage = '';
+    this.employeeToDelete = null;
     
     this._resizeHandler = this._handleResize.bind(this);
     window.addEventListener('resize', this._resizeHandler);
@@ -215,20 +219,24 @@ export class EmployeeListPage extends LitElement {
   
   _onDeleteEmployee(e) {
     const employee = e.detail.employee;
-    
-    if (confirm(i18n.t('messages.confirmDelete'))) {
-      store.dispatch(deleteEmployee(employee.id));
+    this.employeeToDelete = employee;
+    this.confirmMessage = i18n.t('messages.confirmDelete');
+    this.showConfirmModal = true;
+   
+    this.requestUpdate();
+  }
+  
+  _handleConfirmDelete() {
+    if (this.employeeToDelete) {
+      store.dispatch(deleteEmployee(this.employeeToDelete.id));
+      this.showConfirmModal = false;
+      this.employeeToDelete = null;
     }
   }
   
-  _openTestModal() {
-    this.showTestModal = true;
-    this.requestUpdate();
-  }
-  
-  _handleModalClosed() {
-    this.showTestModal = false;
-    this.requestUpdate();
+  _handleCancelDelete() {
+    this.showConfirmModal = false;
+    this.employeeToDelete = null;
   }
   
   _renderEmployeeView() {
@@ -276,10 +284,6 @@ export class EmployeeListPage extends LitElement {
       <app-top-bar></app-top-bar>
       
       <div class="container">
-        <button class="test-button" @click=${() => this._openTestModal()}>
-          Open Test Modal
-        </button>
-
         <div class="page-content">
           <employee-list-header
             @view-mode-changed=${this._onViewModeChanged}
@@ -299,12 +303,14 @@ export class EmployeeListPage extends LitElement {
             ></pagination-component>
           </div>
         ` : ''}
-
-        <test-modal 
-          .isOpen=${this.showTestModal}
-          @modal-closed=${() => this._handleModalClosed()}
-        ></test-modal>
       </div>
+
+      <confirmation-modal
+        .isOpen=${this.showConfirmModal}
+        .message=${this.confirmMessage}
+        .onConfirm=${() => this._handleConfirmDelete()}
+        .onCancel=${() => this._handleCancelDelete()}
+      ></confirmation-modal>
     `;
   }
 }
