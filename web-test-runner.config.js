@@ -98,6 +98,24 @@ export default {
       timeout: '60000',
     },
   },
+  coverageConfig: {
+    report: true,
+    reportDir: 'coverage',
+    threshold: {
+      statements: 85,
+      branches: 85,
+      functions: 85,
+      lines: 85,
+    },
+    include: [
+      'src/**/*.js',
+    ],
+    exclude: [
+      'src/**/*.test.js',
+      'src/**/*.spec.js',
+      'test/**/*.js',
+    ],
+  },
   plugins: [
     // Detect browsers without modules (e.g. IE11) and transform to SystemJS
     // (https://modern-web.dev/docs/dev-server/plugins/legacy/).
