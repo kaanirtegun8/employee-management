@@ -8,6 +8,11 @@ export const Events = Object.freeze({
   LANG_CHANGED: 'lang-changed'
 });
 
+export const ViewMode = Object.freeze({
+  TABLE: 'table',
+  LIST: 'list'
+});
+
 export const EmployeeFields = Object.freeze({
   FIRST_NAME: 'firstName',
   LAST_NAME: 'lastName',
