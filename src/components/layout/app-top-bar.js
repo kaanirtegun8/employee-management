@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { i18n } from '../../i18n/i18n.js';
-import { Events } from '../../constants/enums.js';
+import { Events, Language } from '../../constants/enums.js';
 
 export class AppTopBar extends LitElement {
   static get properties() {
@@ -11,14 +11,14 @@ export class AppTopBar extends LitElement {
   
   constructor() {
     super();
-    this.currentLang = document.documentElement.lang || 'en';
+    this.currentLang = document.documentElement.lang || Language.EN;
     
     window.addEventListener(Events.LANGUAGE_CHANGED, this._onLanguageChanged.bind(this));
   }
   
   connectedCallback() {
     super.connectedCallback();
-    this.currentLang = document.documentElement.lang || 'en';
+    this.currentLang = document.documentElement.lang || Language.EN;
   }
   
   _onLanguageChanged(e) {
@@ -221,16 +221,16 @@ export class AppTopBar extends LitElement {
           
           <div class="language-switcher">
             <button 
-              class="lang-button ${this.currentLang === 'en' ? 'active' : ''}" 
-              @click=${() => this._changeLang('en')}
+              class="lang-button ${this.currentLang === Language.EN ? 'active' : ''}" 
+              @click=${() => this._changeLang(Language.EN)}
               title="English"
             >
               <span>🇬🇧</span>
             </button>
             
             <button 
-              class="lang-button ${this.currentLang === 'tr' ? 'active' : ''}" 
-              @click=${() => this._changeLang('tr')}
+              class="lang-button ${this.currentLang === Language.TR ? 'active' : ''}" 
+              @click=${() => this._changeLang(Language.TR)}
               title="Türkçe"
             >
               <span>🇹🇷</span>
