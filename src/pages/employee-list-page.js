@@ -82,7 +82,7 @@ export class EmployeeListPage extends LitElement {
         background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1.25rem;
+        padding: 20px;
         margin-bottom: 1rem;
       }
       
@@ -244,6 +244,8 @@ export class EmployeeListPage extends LitElement {
   }
   
   render() {
+    const totalPages = this._getTotalPages();
+    
     return html`
       <app-top-bar></app-top-bar>
       
@@ -259,13 +261,15 @@ export class EmployeeListPage extends LitElement {
           ${this._renderEmployeeView()}
         </div>
         
-        <div class="pagination-container">
-          <app-pagination
-            .currentPage=${this.currentPage}
-            .totalPages=${this._getTotalPages()}
-            @page-changed=${this._onPageChanged}
-          ></app-pagination>
-        </div>
+        ${totalPages > 1 ? html`
+          <div class="pagination-container">
+            <app-pagination
+              .currentPage=${this.currentPage}
+              .totalPages=${totalPages}
+              @page-changed=${this._onPageChanged}
+            ></app-pagination>
+          </div>
+        ` : ''}
       </div>
     `;
   }

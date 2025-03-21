@@ -69,7 +69,7 @@ export class AddEmployeePage extends LitElement {
         background-color: #ffffff;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        padding: 1.25rem;
+        padding: 20px;
         margin-bottom: 1rem;
       }
       

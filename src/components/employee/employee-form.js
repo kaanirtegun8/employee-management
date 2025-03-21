@@ -44,7 +44,6 @@ export class EmployeeForm extends LitElement {
   
   updated(changedProperties) {
     if (changedProperties.has('employee') && this.employee && Object.keys(this.employee).length > 0) {
-      console.log('Employee data detected, switching to edit mode:', this.employee);
       this.isEditMode = true;
       this.formData = { ...this.employee };
     }

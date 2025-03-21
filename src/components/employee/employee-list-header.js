@@ -38,7 +38,7 @@ export class EmployeeListHeader extends LitElement {
       }
       
       .title {
-        font-size: 1.5rem;
+        font-size: 24px;
         color: #ff6600;
         font-weight: bold;
         margin: 0;
